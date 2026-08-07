@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Compress PDF — Free PDF Tools</title>
-  <meta name="description" content="Reduce PDF file size online. 100% private, client-side processing.">
+  <title>Organize PDF — Free PDF Tools</title>
+  <meta name="description" content="Reorder, rotate, or delete PDF pages online. 100% private, client-side processing.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +12,8 @@
 
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -233,38 +235,18 @@
       display: block;
     }
 
+    .workspace-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
     .section-label {
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .file-card {
-      border: 1px solid var(--border);
-      background: var(--bg);
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 24px;
-    }
-
-    .file-details {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .file-name {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .file-meta {
-      font-size: 12px;
       color: var(--muted);
     }
 
@@ -280,43 +262,97 @@
       color: var(--primary);
     }
 
-    /* Controls */
-    .options-panel {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      padding: 24px;
-      margin-bottom: 24px;
+    /* Grid Layout for Big Thumbnails */
+    .pages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
     }
 
-    .option-group {
+    .page-card {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      align-items: center;
+      position: relative;
+      cursor: grab;
+      transition: all 0.15s ease;
     }
 
-    .option-label {
-      font-size: 13px;
+    .page-card:hover {
+      border-color: #111111;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .page-card:active {
+      cursor: grabbing;
+    }
+
+    .thumbnail-box {
+      width: 100%;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .thumbnail-box canvas {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.2s ease;
+    }
+
+    .page-meta {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page-number {
+      font-size: 12px;
+      font-family: monospace;
+      color: var(--muted);
       font-weight: 600;
     }
 
-    .option-desc {
-      font-size: 12px;
-      color: var(--muted);
+    .page-actions {
+      display: flex;
+      gap: 8px;
     }
 
-    select {
-      background: var(--bg);
+    .card-btn {
+      background: none;
       border: 1px solid var(--border);
-      padding: 8px 12px;
-      font-size: 13px;
-      font-family: var(--font);
       color: var(--text);
-      max-width: 300px;
-      outline: none;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
     }
 
-    select:focus {
+    .card-btn:hover {
       border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .card-btn.delete-btn:hover {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    /* Sortable Ghost State */
+    .sortable-ghost {
+      opacity: 0.3;
     }
 
     /* Actions Bar */
@@ -324,8 +360,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-top: 16px;
+      padding-top: 20px;
       border-top: 1px solid var(--border);
+    }
+
+    .action-tip {
+      font-size: 12px;
+      color: var(--muted);
     }
 
     .btn {
@@ -377,16 +418,17 @@
       <nav>
         <a href="merge.html">Merge</a>
         <a href="split.html">Split</a>
-        <a href="compress.html" class="active">Compress</a>
-        <a href="organize.html">Organize</a>
+        <a href="compress.html">Compress</a>
+        <a href="organize.html" class="active">Organize</a>
       </nav>
     </div>
   </header>
 
   <section class="hero">
     <div class="hero-container">
-      <h1>Compress PDF file</h1>
-      <p class="hero-desc">Compress the size of your PDF.</p>
+      
+      <h1>Organize & Delete Pages</h1>
+      <p class="hero-desc">Reorder, rotate individual pages, or delete pages.</p>
     </div>
   </section>
 
@@ -396,35 +438,20 @@
     <div id="dropzone" class="dropzone">
       <input type="file" id="file-input" accept="application/pdf,.pdf" style="display: none;" />
       <div class="dropzone-title">Select or drop a PDF file</div>
-      <div class="dropzone-sub">Upload a single file to compress size</div>
+      <div class="dropzone-sub">Upload a document to visually manage pages</div>
     </div>
 
     <div id="workspace" class="workspace">
-      <div class="section-label">Selected File</div>
-
-      <div class="file-card">
-        <div class="file-details">
-          <span id="file-name" class="file-name">filename.pdf</span>
-          <span id="file-meta" class="file-meta">0 KB</span>
-        </div>
-        <button id="clear-btn" class="clear-btn">Remove file</button>
+      <div class="workspace-header">
+        <span id="page-count-label" class="section-label">0 Pages Loaded</span>
+        <button id="clear-btn" class="clear-btn">Clear</button>
       </div>
 
-      <div class="options-panel">
-        <div class="option-group">
-          <label class="option-label" for="compression-level">Compression Settings</label>
-          <select id="compression-level">
-            <option value="low">Low Compression</option>
-            <option value="medium">Standard Compression</option>
-            <option value="high">High Compression</option>
-          </select>
-
-        </div>
-      </div>
+      <div id="pages-grid" class="pages-grid"></div>
 
       <div class="actions-bar">
-        <span></span>
-        <button id="compress-btn" class="btn">Compress File</button>
+        <span class="action-tip">Drag thumbnails to reorder pages</span>
+        <button id="save-btn" class="btn">Export PDF</button>
       </div>
     </div>
   </main>
@@ -446,15 +473,16 @@
       const dropzone = document.getElementById('dropzone');
       const fileInput = document.getElementById('file-input');
       const workspace = document.getElementById('workspace');
-      const fileNameEl = document.getElementById('file-name');
-      const fileMetaEl = document.getElementById('file-meta');
+      const pagesGrid = document.getElementById('pages-grid');
+      const pageCountLabel = document.getElementById('page-count-label');
       const clearBtn = document.getElementById('clear-btn');
-      const compressBtn = document.getElementById('compress-btn');
+      const saveBtn = document.getElementById('save-btn');
       const alert = document.getElementById('alert');
-      const compressionLevel = document.getElementById('compression-level');
 
-      let selectedFile = null;
+      let pagesData = []; // [{ originalIndex, rotation }]
       let rawArrayBuffer = null;
+      let pdfFileName = 'organized.pdf';
+      let sortable = null;
 
       dropzone.addEventListener('click', () => fileInput.click());
       clearBtn.addEventListener('click', reset);
@@ -493,19 +521,106 @@
           return;
         }
 
-        selectedFile = file;
-        rawArrayBuffer = await file.arrayBuffer();
+        try {
+          pdfFileName = file.name;
+          rawArrayBuffer = await file.arrayBuffer();
 
-        fileNameEl.textContent = file.name;
-        fileMetaEl.textContent = `${(file.size / 1024).toFixed(1)} KB`;
+          const pdfDoc = await pdfjsLib.getDocument({ data: rawArrayBuffer.slice(0) }).promise;
+          const numPages = pdfDoc.numPages;
 
-        dropzone.style.display = 'none';
-        workspace.classList.add('active');
+          pagesData = [];
+          pagesGrid.innerHTML = '';
+
+          dropzone.style.display = 'none';
+          workspace.classList.add('active');
+          pageCountLabel.textContent = `${numPages} Pages Loaded`;
+
+          for (let i = 1; i <= numPages; i++) {
+            const pageObj = {
+              id: 'page-' + Math.random().toString(36).substr(2, 9),
+              originalIndex: i - 1, // 0-indexed for pdf-lib
+              rotation: 0
+            };
+            pagesData.push(pageObj);
+
+            const card = document.createElement('div');
+            card.className = 'page-card';
+            card.dataset.id = pageObj.id;
+
+            card.innerHTML = `
+              <div class="thumbnail-box">
+                <canvas id="canvas-${pageObj.id}"></canvas>
+              </div>
+              <div class="page-meta">
+                <span class="page-number">Page ${i}</span>
+                <div class="page-actions">
+                  <button class="card-btn rotate-btn" title="Rotate 90 degrees">Rotate</button>
+                  <button class="card-btn delete-btn" title="Delete page">&times;</button>
+                </div>
+              </div>
+            `;
+
+            pagesGrid.appendChild(card);
+
+            // Render high-DPI thumbnail onto canvas
+            const page = await pdfDoc.getPage(i);
+            const viewport = page.getViewport({ scale: 0.8 });
+            const canvas = card.querySelector('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+            // Rotate Handler
+            card.querySelector('.rotate-btn').addEventListener('click', (e) => {
+              e.stopPropagation();
+              pageObj.rotation = (pageObj.rotation + 90) % 360;
+              canvas.style.transform = `rotate(${pageObj.rotation}deg)`;
+            });
+
+            // Delete Handler
+            card.querySelector('.delete-btn').addEventListener('click', (e) => {
+              e.stopPropagation();
+              pagesData = pagesData.filter(p => p.id !== pageObj.id);
+              card.remove();
+              updatePageNumbers();
+            });
+          }
+
+          initSortable();
+
+        } catch (err) {
+          console.error(err);
+          showAlert('Failed to process PDF. File may be encrypted or corrupted.');
+        }
+      }
+
+      function initSortable() {
+        if (sortable) sortable.destroy();
+        sortable = new Sortable(pagesGrid, {
+          animation: 150,
+          ghostClass: 'sortable-ghost',
+          onEnd: () => {
+            const currentIds = Array.from(pagesGrid.children).map(c => c.dataset.id);
+            pagesData.sort((a, b) => currentIds.indexOf(a.id) - currentIds.indexOf(b.id));
+            updatePageNumbers();
+          }
+        });
+      }
+
+      function updatePageNumbers() {
+        const cards = Array.from(pagesGrid.children);
+        cards.forEach((card, idx) => {
+          card.querySelector('.page-number').textContent = `Page ${idx + 1}`;
+        });
+        pageCountLabel.textContent = `${pagesData.length} Pages Remaining`;
       }
 
       function reset() {
-        selectedFile = null;
+        pagesData = [];
         rawArrayBuffer = null;
+        pagesGrid.innerHTML = '';
         workspace.classList.remove('active');
         dropzone.style.display = 'block';
         hideAlert();
@@ -520,73 +635,37 @@
         alert.className = 'alert';
       }
 
-      compressBtn.addEventListener('click', async () => {
-        if (!rawArrayBuffer) return;
+      saveBtn.addEventListener('click', async () => {
+        if (pagesData.length === 0) {
+          showAlert('At least one page must remain to export a document.');
+          return;
+        }
 
-        compressBtn.disabled = true;
-        compressBtn.textContent = 'Compressing...';
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Processing...';
         hideAlert();
 
         try {
-          const level = compressionLevel.value;
-          const { PDFDocument } = PDFLib;
+          const { PDFDocument, degrees } = PDFLib;
+          const srcPdf = await PDFDocument.load(rawArrayBuffer);
+          const outPdf = await PDFDocument.create();
 
-          // Calibrated scale and JPEG quality targets
-          let scale = 1.5;   // High resolution to keep text crisp
-          let quality = 0.8; // Modest image compression
-
-          if (level === 'low') {
-            // Light Compression: High DPI, subtle image quality drop
-            // Target: ~25-35% size reduction (e.g., 1300 KB -> ~850-900 KB)
-            scale = 1.5;
-            quality = 0.82;
-          } else if (level === 'medium') {
-            // Standard Compression: Medium DPI, balanced quality
-            // Target: ~50-60% size reduction (e.g., 1300 KB -> ~500-600 KB)
-            scale = 1.2;
-            quality = 0.68;
-          } else if (level === 'high') {
-            // Heavy Compression: Lower DPI, aggressive quality drop
-            // Target: ~70%+ size reduction (e.g., 1300 KB -> ~200-300 KB)
-            scale = 0.8;
-            quality = 0.45;
+          for (const item of pagesData) {
+            const [copiedPage] = await outPdf.copyPages(srcPdf, [item.originalIndex]);
+            if (item.rotation !== 0) {
+              const currentAngle = copiedPage.getRotation().angle;
+              copiedPage.setRotation(degrees((currentAngle + item.rotation) % 360));
+            }
+            outPdf.addPage(copiedPage);
           }
 
-          const pdfDoc = await pdfjsLib.getDocument({ data: rawArrayBuffer.slice(0) }).promise;
-          const newPdf = await PDFDocument.create();
-
-          for (let i = 1; i <= pdfDoc.numPages; i++) {
-            const page = await pdfDoc.getPage(i);
-            const viewport = page.getViewport({ scale: scale });
-
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-
-            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-
-            const imgDataUrl = canvas.toDataURL('image/jpeg', quality);
-            const imgBytes = await fetch(imgDataUrl).then(res => res.arrayBuffer());
-            
-            const embeddedImg = await newPdf.embedJpg(imgBytes);
-            const newPage = newPdf.addPage([viewport.width / scale, viewport.height / scale]);
-            
-            newPage.drawImage(embeddedImg, {
-              x: 0,
-              y: 0,
-              width: viewport.width / scale,
-              height: viewport.height / scale,
-            });
-          }
-
-          const pdfBytes = await newPdf.save({ useObjectStreams: true });
+          const pdfBytes = await outPdf.save();
           const blob = new Blob([pdfBytes], { type: 'application/pdf' });
           const url = URL.createObjectURL(blob);
 
           const a = document.createElement('a');
           a.href = url;
-          a.download = `compressed_${selectedFile.name}`;
+          a.download = `organized_${pdfFileName}`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -595,10 +674,10 @@
 
         } catch (err) {
           console.error(err);
-          showAlert('Failed to compress file. The document may be protected or corrupted.');
+          showAlert('Failed to export PDF file.');
         } finally {
-          compressBtn.disabled = false;
-          compressBtn.textContent = 'Compress File';
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Export PDF';
         }
       });
     });
