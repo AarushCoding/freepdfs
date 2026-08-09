@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Compress PDF to 500KB Free | freePDFs.tools</title>
+  <meta name="description" content="Learn how to quickly compress PDF files to under 500KB online for free. No file uploads, no watermarks, and 100% private client-side processing.">
+  
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #fafafa;
+      --border: #e2e2e2;
+      --text: #0f0f0f;
+      --muted: #666666;
+      --primary: #dc2626; /* Crimson Red */
+      --primary-hover: #b91c1c;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Utility Bar */
+    .top-bar {
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 2px;
+      letter-spacing: 0.05em;
+    }
+
+    nav {
+      display: flex;
+      gap: 4px;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+    }
+
+    nav a:hover {
+      color: var(--primary);
+      background: var(--surface);
+    }
+
+    nav a.active {
+      color: var(--primary);
+      background: rgba(220, 38, 38, 0.06);
+    }
+
+    /* Hero Section */
+    .hero {
+      border-bottom: 1px solid var(--border);
+      padding: 64px 24px;
+      background: var(--surface);
+    }
+
+    .hero-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .hero-desc {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 580px;
+      font-weight: 400;
+    }
+
+    /* Main Workspace Layout */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* Tools Grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .tool-card {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      padding: 24px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--primary);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .tool-card:hover {
+      border-color: #111111;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    }
+
+    .tool-card:hover::before {
+      opacity: 1;
+    }
+
+    .tool-num {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      font-mono: monospace;
+      margin-bottom: 24px;
+    }
+
+    .tool-card:hover .tool-num {
+      color: var(--primary);
+    }
+
+    .tool-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    .tool-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .tool-action {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Structural Features Banner */
+    .features-panel {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 32px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-item {
+      border-left: 2px solid var(--primary);
+      padding-left: 16px;
+    }
+
+    .feature-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      background: var(--bg);
+    }
+
+    .footer-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 640px) {
+      .footer-container {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+      h1 {
+        font-size: 28px;
+      }
+    }
+  
+  
+    .content-container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .tool-box {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 32px;
+      border-top: 3px solid var(--primary);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.15s ease;
+      margin-top: 16px;
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+    .article-body h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 32px 0 12px 0;
+    }
+    .article-body p {
+      font-size: 15px;
+      color: #333333;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .steps-list {
+      margin: 20px 0 32px 20px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .steps-list li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-bar">
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        <span class="brand-badge">PDF</span>
+        freepdfs.tools
+      </a>
+      <nav>
+        <a href="merge.html">Merge</a>
+        <a href="split.html">Split</a>
+        <a href="compress.html" class="active">Compress</a>
+        <a href="organize.html">Organize</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-container">
+    
+      <h1>How to Compress a PDF File to Under 500KB</h1>
+      <p class="hero-desc">
+        Shrink large PDF documents to meet strict file size requirements for email, job portals, or online applications without losing quality.
+      </p>
+    </div>
+  </section>
+
+  <main>
+    <div class="content-container">
+
+      <div class="tool-box">
+        <div class="section-label">Quick Action</div>
+        <h2 style="margin-top: 4px;">Shrink PDF File Size Online</h2>
+        <p class="tool-desc" style="margin: 8px auto 0; max-width: 480px;">
+          Fast, 100% private, browser-based compression. Your documents never leave your computer.
+        </p>
+        <a href="compress.html" class="btn-primary">Compress your PDF for free &rarr;</a>
+      </div>
+
+      <article class="article-body">
+        <h2>Why Job & Government Portals Require Small PDFs</h2>
+        <p>
+          Many job application forms, university admissions portals, and government websites cap file uploads at <strong>500KB</strong>. Larger PDF files containing high-resolution scans or heavy graphics will trigger upload errors.
+        </p>
+
+        <h2>3 Easy Steps to Reduce PDF Size to 500KB</h2>
+        <ol class="steps-list">
+          <li><strong>Open the Tool:</strong> Navigate to our free <a href="compress.html" style="color: var(--primary);">PDF Compressor</a>.</li>
+          <li><strong>Select Your File:</strong> Drag and drop your document into the compression area.</li>
+          <li><strong>Download:</strong> Choose your target compression level and download your new PDF file instantly.</li>
+        </ol>
+
+        <h2>Why Use freePDFs.tools?</h2>
+        <p>
+          Unlike other PDF editors that upload your private files to remote servers, our client-side technology processes everything directly inside your browser using JavaScript. Your confidential information stays completely private on your device.
+        </p>
+      </article>
+
+      <div class="features-panel" style="margin-top: 48px;">
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="feature-title">100% Client-Side</div>
+            <div class="feature-desc">Files never upload to external servers.</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-title">Zero Limits</div>
+            <div class="feature-desc">Compress unlimited files for free.</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-title">No Watermarks</div>
+            <div class="feature-desc">Clean, original quality output.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <p>&copy; freepdfs.tools</p>
+      <p>
+        <a href="privacy.html" style="color: var(--muted); margin-right: 12px; text-decoration: none;">Privacy Policy</a>
+        <a href="terms.html" style="color: var(--muted); text-decoration: none;">Terms of Service</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
